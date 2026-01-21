@@ -80,7 +80,7 @@ export default function LoginScreen() {
     if (modalVariant === 'success') {
       AsyncStorage.getItem('user').then(userRaw => {
         const user = userRaw ? JSON.parse(userRaw) : null;
-        if (user?.role === 'instructor') {
+        if (user?.role === 'teacher' || user?.role === 'instructor') {
           router.replace('/screens/instructor/InstructorDashboard');
         } else {
           router.replace('/screens/student/StudentDashboard');

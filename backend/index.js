@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./auth');
 const studentDashboardRoutes = require('./routes/student/dashboard');
+const instructorDashboardRoutes = require('./routes/instructor/dashboard');
 const dotenv = require('dotenv');
 const path = require('path');
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/student/dashboard', studentDashboardRoutes);
+app.use('/api/instructor/dashboard', instructorDashboardRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
