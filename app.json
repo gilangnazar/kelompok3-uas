@@ -1,20 +1,11 @@
 {
   "expo": {
-<<<<<<< HEAD
-    "name": "UAS_LMS",
-    "slug": "UAS_LMS",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "uaslms",
-=======
     "name": "kelompok3-uas",
     "slug": "kelompok3-uas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kelompok3uas",
->>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
+    "scheme": "uaslms",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -47,12 +38,8 @@
             "backgroundColor": "#000000"
           }
         }
-<<<<<<< HEAD
       ],
       "@react-native-community/datetimepicker"
-=======
-      ]
->>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
     ],
     "experiments": {
       "typedRoutes": true,
