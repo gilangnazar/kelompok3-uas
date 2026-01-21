@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "uas_lms",
+=======
+  "name": "kelompok3-uas",
+>>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -12,13 +16,17 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
+<<<<<<< HEAD
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.4",
+=======
+>>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "expo": "~54.0.31",
     "expo-constants": "~18.0.13",
+<<<<<<< HEAD
     "expo-document-picker": "~14.0.8",
     "expo-file-system": "~19.0.21",
     "expo-font": "~14.0.10",
@@ -28,6 +36,13 @@
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.21",
     "expo-sharing": "~14.0.8",
+=======
+    "expo-font": "~14.0.11",
+    "expo-haptics": "~15.0.8",
+    "expo-image": "~3.0.11",
+    "expo-linking": "~8.0.11",
+    "expo-router": "~6.0.22",
+>>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-symbols": "~1.0.8",
@@ -37,12 +52,20 @@
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
+<<<<<<< HEAD
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-web": "~0.21.0",
     "react-native-webview": "13.15.0",
     "react-native-worklets": "0.5.1"
+=======
+    "react-native-worklets": "0.5.1",
+    "react-native-reanimated": "~4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0",
+    "react-native-web": "~0.21.0"
+>>>>>>> 771837da2e60a6441d3e3dc419c52197d9912b7a
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
