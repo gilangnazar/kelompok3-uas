@@ -30,19 +30,28 @@ export default function RootLayout() {
       <Stack.Screen
         name='QuizReadyScreen'
         options={{
-          title: 'Are You Ready?',
+          title: 'Quiz',
           headerTitleAlign: 'center'
         }}
       />
-      {/* <Stack.Screen
-        name=''
+      <Stack.Screen
+        name='QuizTakeScreen'
         options={{
           title: 'Take Quiz',
           headerTitleAlign: 'center',
           headerLeft: () => null, // Disable back button during quiz
           gestureEnabled: false // Prevent swipe back during quiz
         }}
-      /> */}
+      />
+      <Stack.Screen
+        name='QuizResultScreen'
+        options={{
+          title: 'Quiz Result',
+          headerTitleAlign: 'center',
+          headerLeft: () => null, // Disable back button on results
+          gestureEnabled: false // Prevent swipe back on results
+        }}
+      />
     </Stack>
   );
 }
