@@ -81,13 +81,13 @@ export default function ProfileScreen() {
   );
 
   // Dynamic Navigation Items
-  const navItems =
+  const navItems = 
       [
-        { key: 'home', label: 'Home', icon: 'home', onPress: () => router.replace('/screens/student/StudentDashboard') },
-        { key: 'courses', label: 'Courses', icon: 'book' },
-        { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
+        { key: 'home', label: 'Dashboard', icon: 'grid', onPress: () => router.replace('/screens/instructor/InstructorDashboard') },
+        { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.replace('/screens/instructor/CourseListScreen') },
+        { key: 'students', label: 'Students', icon: 'people' },
         { key: 'profile', label: 'Profile', icon: 'person', onPress: () => {} }
-      ];
+      ]
 
   if (loading) {
     return (

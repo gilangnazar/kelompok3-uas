@@ -9,7 +9,7 @@ export default function QuizReadyScreen() {
 
   const handleStartQuiz = () => {
     router.push({
-      pathname: '/QuizTakeScreen',
+      pathname: '/screens/student/QuizTakeScreen',
       params: {
         quizId,
         quizTitle,

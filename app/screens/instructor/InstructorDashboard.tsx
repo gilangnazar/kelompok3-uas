@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Modal,
   RefreshControl,
   ScrollView,
   StatusBar,
@@ -16,6 +17,7 @@ import {
 } from 'react-native';
 
 import { API_URL } from '../../../config/api';
+import AppModal from '../../components/AppModal';
 import BottomNavigator from '../../components/navigation/BottomNavigator';
 
 const { width } = Dimensions.get('window');
@@ -63,6 +65,60 @@ export default function InstructorDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState<DashboardData | null>(null);
+  const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false);
+  const [courseModalVisible, setCourseModalVisible] = useState(false);
+  const [courses, setCourses] = useState<Array<{ id: number; name: string }>>([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
+
+  const handleSessionConfirm = async () => {
+    setSessionExpiredVisible(false);
+    await AsyncStorage.multiRemove(['token', 'user']);
+    router.replace('/screens/auth/LoginScreen');
+  };
+
+  const openCoursePicker = async () => {
+    setCourseModalVisible(true);
+    if (courses.length > 0 || coursesLoading) return;
+
+    try {
+      setCoursesLoading(true);
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        setSessionExpiredVisible(true);
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/instructor/courses`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        setSessionExpiredVisible(true);
+        return;
+      }
+
+      if (!response.ok) {
+        Alert.alert('Error', 'Failed to load courses');
+        return;
+      }
+
+      const list = await response.json();
+      setCourses(list || []);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Network error');
+    } finally {
+      setCoursesLoading(false);
+    }
+  };
+
+  const handleSelectCourse = (course: { id: number; name: string }) => {
+    setCourseModalVisible(false);
+    router.push({
+      pathname: '/screens/instructor/CreateAssignmentScreen',
+      params: { classId: course.id, className: course.name }
+    });
+  };
 
   const fetchDashboardData = async () => {
     try {
@@ -74,7 +130,7 @@ export default function InstructorDashboard() {
       }
 
       if (!token) {
-        router.replace('/screens/auth/LoginScreen');
+        setSessionExpiredVisible(true);
         return;
       }
 
@@ -85,8 +141,7 @@ export default function InstructorDashboard() {
       });
 
       if (response.status === 401 || response.status === 403) {
-        await AsyncStorage.multiRemove(['token', 'user']);
-        router.replace('/screens/auth/LoginScreen');
+        setSessionExpiredVisible(true);
         return;
       }
 
@@ -134,6 +189,57 @@ export default function InstructorDashboard() {
 
   return (
     <View style={styles.container}>
+      <AppModal
+        visible={sessionExpiredVisible}
+        title="Session Expired"
+        message="Sesi Anda telah habis. Silakan login ulang."
+        variant="error"
+        confirmText="Login"
+        onConfirm={handleSessionConfirm}
+      />
+      <Modal
+        visible={courseModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCourseModalVisible(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Course</Text>
+              <TouchableOpacity onPress={() => setCourseModalVisible(false)}>
+                <Ionicons name="close" size={20} color="#475569" />
+              </TouchableOpacity>
+            </View>
+
+            {coursesLoading ? (
+              <View style={styles.modalLoading}>
+                <ActivityIndicator size="small" color={COLORS.primary} />
+                <Text style={styles.modalLoadingText}>Loading courses...</Text>
+              </View>
+            ) : (
+              <ScrollView style={styles.modalList}>
+                {courses.length === 0 ? (
+                  <Text style={styles.modalEmpty}>No courses available.</Text>
+                ) : (
+                  courses.map((course) => (
+                    <TouchableOpacity
+                      key={course.id}
+                      style={styles.modalItem}
+                      onPress={() => handleSelectCourse(course)}
+                    >
+                      <View style={styles.modalItemIcon}>
+                        <Ionicons name="book-outline" size={18} color={COLORS.primary} />
+                      </View>
+                      <Text style={styles.modalItemText}>{course.name}</Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </ScrollView>
+            )}
+          </View>
+        </View>
+      </Modal>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
       
       {loading ? (
@@ -183,7 +289,10 @@ export default function InstructorDashboard() {
 
             {/* Quick Actions */}
             <View style={styles.actionGrid}>
-              <TouchableOpacity style={styles.actionBtn}>
+              <TouchableOpacity
+                style={styles.actionBtn}
+                onPress={openCoursePicker}
+              >
                 <View style={[styles.actionIcon, { backgroundColor: '#E0E7FF' }]}>
                   <Ionicons name="add" size={24} color={COLORS.primary} />
                 </View>
@@ -267,9 +376,9 @@ export default function InstructorDashboard() {
         activeKey='home'
         items={[
           { key: 'home', label: 'Dashboard', icon: 'grid', onPress: () => {} },
-          { key: 'courses', label: 'My Classes', icon: 'book' },
-          { key: 'students', label: 'Students', icon: 'people' },
-          { key: 'profile', label: 'Profile', icon: 'person', onPress: () => router.push('/screens/student/ProfileScreen') }
+          { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.push('/screens/instructor/CourseListScreen') },
+          { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
+          { key: 'profile', label: 'Profile', icon: 'person', onPress: () => router.push('/screens/instructor/ProfileScreen') }
         ]}
       />
     </View>
@@ -541,5 +650,79 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     textAlign: 'center',
     padding: 20,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 18,
+    elevation: 6
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.textMain
+  },
+  modalList: {
+    maxHeight: 360
+  },
+  modalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: '#F8FAFC',
+    marginBottom: 8
+  },
+  modalItemIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: '#E0E7FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10
+  },
+  modalItemText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1f2937',
+    fontWeight: '600'
+  },
+  modalEmpty: {
+    textAlign: 'center',
+    color: COLORS.textSecondary,
+    paddingVertical: 16
+  },
+  modalLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    gap: 10
+  },
+  modalLoadingText: {
+    color: COLORS.textSecondary,
+    fontSize: 13,
+    fontWeight: '500'
   }
 });

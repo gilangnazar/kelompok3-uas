@@ -68,13 +68,12 @@ CREATE TABLE submissions (
 
 CREATE TABLE quizzes ( 
     id INT AUTO_INCREMENT PRIMARY KEY, 
-    course_id INT, 
+    assignment_id INT, 
     title VARCHAR(255) NOT NULL, 
     description TEXT, 
     time_limit_minutes INT DEFAULT 30, -- Batas waktu pengerjaan 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-    FOREIGN KEY (course_id) REFERENCES courses(id) 
-
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE
 );
 
 CREATE TABLE questions ( 
@@ -107,14 +106,13 @@ CREATE TABLE quiz_attempts (
 
 CREATE TABLE attempt_answers ( 
     id INT AUTO_INCREMENT PRIMARY KEY, 
-    attempt_id INT, 
+    student_id INT, 
     question_id INT, 
-    selected_option_id INT, -- ID dari tabel options yang dipilih siswa 
-    is_correct_at_time BOOLEAN, -- Denormalisasi untuk mempermudah laporan
-    FOREIGN KEY (attempt_id) REFERENCES quiz_attempts(id) ON DELETE 
-CASCADE, 
-    FOREIGN KEY (question_id) REFERENCES questions(id), 
-    FOREIGN KEY (selected_option_id) REFERENCES options(id) 
+    selected_option_id INT, 
+    submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE, 
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE, 
+    FOREIGN KEY (selected_option_id) REFERENCES options(id) ON DELETE CASCADE
 );
 
 CREATE TABLE discussions ( 
@@ -251,3 +249,51 @@ INSERT INTO user_logs (user_id, activity) VALUES
 (3, 'Login ke LMS'), 
 (3, 'Mengunduh materi HTML'), 
 (4, 'Mengumpulkan tugas HTML');
+
+INSERT INTO quizzes (id, assignment_id, title, description, time_limit_minutes) 
+VALUES (1, 2, 'Quiz 1: HTML & CSS', 'Basic HTML and CSS knowledge test.', 30);
+
+INSERT INTO questions (id, quiz_id, question_text, points) VALUES 
+(1, 1, 'What does HTML stand for?', 1),
+(2, 1, 'Which property is used to change the background color?', 1),
+(3, 1, 'Which HTML tag is used to define an internal style sheet?', 1),
+(4, 1, 'Which HTML element is the largest heading?', 1),
+(5, 1, 'How do you select an element with id "demo"?', 1);
+
+INSERT INTO options (id, question_id, option_text, is_correct) VALUES 
+(1, 1, 'Hyper Text Markup Language', TRUE),
+(2, 1, 'Home Tool Markup Language', FALSE),
+(3, 1, 'Hyperlinks and Text Markup Language', FALSE),
+(4, 1, 'Hyper Tool Multi Language', FALSE),
+(5, 2, 'color', FALSE),
+(6, 2, 'bgcolor', FALSE),
+(7, 2, 'background-color', TRUE),
+(8, 2, 'bg-color', FALSE),
+(9, 3, '<script>', FALSE),
+(10, 3, '<style>', TRUE),
+(11, 3, '<css>', FALSE),
+(12, 3, '<design>', FALSE),
+(13, 4, '<h6>', FALSE),
+(14, 4, '<heading>', FALSE),
+(15, 4, '<h1>', TRUE),
+(16, 4, '<head>', FALSE),
+(17, 5, '.demo', FALSE),
+(18, 5, '#demo', TRUE),
+(19, 5, '*demo', FALSE),
+(20, 5, 'demo', FALSE);
+
+INSERT INTO quiz_attempts (student_id, quiz_id, score, status) VALUES 
+(3, 1, 80, 'finished'),
+(4, 1, 100, 'finished');
+
+INSERT INTO attempt_answers (student_id, question_id, selected_option_id) VALUES 
+(3, 1, 1),
+(3, 2, 7),
+(3, 3, 10),
+(3, 4, 15),
+(3, 5, 17),
+(4, 1, 1),
+(4, 2, 7),
+(4, 3, 10),
+(4, 4, 15),
+(4, 5, 18);

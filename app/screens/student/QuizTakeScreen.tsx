@@ -112,7 +112,7 @@ export default function QuizTakeScreen() {
 
     // Navigate to results screen
     router.replace({
-      pathname: '/QuizResultScreen',
+      pathname: '/screens/student/QuizResultScreen',
       params: {
         quizTitle,
         score,
