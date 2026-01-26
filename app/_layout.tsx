@@ -8,55 +8,73 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen
-        name='index'
+        name="index"
         options={{
           title: 'My Classes',
           headerTitleAlign: 'center'
         }}
       />
+
       <Stack.Screen
-        name='screens/student/QuizListScreen'
+        name="screens/student/QuizListScreen"
         options={{
           title: 'Quizzes',
           headerTitleAlign: 'center'
         }}
       />
+
       <Stack.Screen
-        name='screens/student/QuizReadyScreen'
+        name="screens/student/QuizReadyScreen"
         options={{
-          title: 'Are You Ready?',
+          title: 'Quiz',
           headerTitleAlign: 'center'
         }}
       />
+
       <Stack.Screen
-        name='screens/auth/SplashScreen'
+        name="screens/auth/SplashScreen"
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
-        name='screens/auth/LoginScreen'
+        name="screens/auth/LoginScreen"
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
-        name='screens/auth/RegisterScreen'
+        name="screens/auth/RegisterScreen"
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
-        name='screens/student/StudentDashboard'
+        name="screens/student/StudentDashboard"
         options={{ title: 'Student', headerTitleAlign: 'center' }}
       />
+
       <Stack.Screen
-        name='screens/instructor/InstructorDashboard'
+        name="screens/instructor/InstructorDashboard"
         options={{ title: 'Instructor', headerTitleAlign: 'center' }}
       />
-      {/* <Stack.Screen
-        name=''
+
+      <Stack.Screen
+        name="QuizTakeScreen"
         options={{
           title: 'Take Quiz',
           headerTitleAlign: 'center',
-          headerLeft: () => null, // Disable back button during quiz
-          gestureEnabled: false // Prevent swipe back during quiz
+          headerLeft: () => null,
+          gestureEnabled: false
         }}
-      /> */}
+      />
+
+      <Stack.Screen
+        name="QuizResultScreen"
+        options={{
+          title: 'Quiz Result',
+          headerTitleAlign: 'center',
+          headerLeft: () => null,
+          gestureEnabled: false
+        }}
+      />
     </Stack>
   );
 }
