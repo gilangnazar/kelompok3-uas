@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import {
   Image,
@@ -12,10 +14,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppModal from '../../components/AppModal';
 import { API_URL } from '../../../config/api';
+import AppModal from '../../components/AppModal';
 
 const API_BASE_URL = `${API_URL}/api`;
 
@@ -109,7 +109,7 @@ export default function LoginScreen() {
 
           <View style={styles.cardWrap}>
             <View style={styles.card}>
-              <Text style={styles.title}>Login</Text>
+              <Text style={styles.title}>Sign In</Text>
 
               <View style={styles.field}>
                 <Text style={styles.label}>Email Address</Text>
@@ -142,7 +142,7 @@ export default function LoginScreen() {
                 disabled={loading}
                 style={[styles.primaryBtn, !canSubmit && styles.primaryBtnDisabled]}
               >
-                <Text style={styles.primaryBtnText}>Login</Text>
+                <Text style={styles.primaryBtnText}>Sign In</Text>
               </TouchableOpacity>
 
               <View style={styles.bottomRow}>
