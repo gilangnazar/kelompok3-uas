@@ -352,7 +352,7 @@ const CreateAssignmentScreen = () => {
                                 type="date"
                                 value={dueDateText}
                                 onChange={(e) => handleWebDateChange(e.target.value)}
-                                style={styles.webInput as any}
+                                style={{ ...(styles.webInput as any), outlineStyle: 'none' }}
                               />
                             </View>
                         ) : (
@@ -376,7 +376,7 @@ const CreateAssignmentScreen = () => {
                             type="time"
                             value={dueTimeText}
                             onChange={(e) => handleWebTimeChange(e.target.value)}
-                            style={styles.webInput as any}
+                            style={{ ...(styles.webInput as any), outlineStyle: 'none' }}
                           />
                         </View>
                       ) : (
@@ -558,7 +558,6 @@ const styles = StyleSheet.create({
     minWidth: 0,
     width: '100%',
     borderWidth: 0,
-    outlineStyle: 'none',
     fontSize: 14,
     color: '#333',
     backgroundColor: 'transparent',
