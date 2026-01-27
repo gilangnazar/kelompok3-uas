@@ -105,13 +105,13 @@ export default function CourseDetailScreen() {
         <View style={styles.dateBox}>
           <Text style={styles.dateDay}>{item.session_date ? new Date(item.session_date).getDate() : '--'}</Text>
           <Text style={styles.dateMonth}>
-            {item.session_date ? new Date(item.session_date).toLocaleString('default', { month: 'short' }) : '--'}
+            {item.session_date ? new Date(item.session_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '--'}
           </Text>
         </View>
         <View style={{ flex: 1, marginLeft: 16 }}>
           <Text style={styles.cardTitle}>{item.session_topic}</Text>
           <Text style={styles.cardSubtitle}>
-            {item.session_date ? new Date(item.session_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '--'} - {item.location}
+            {item.session_date ? new Date(item.session_date).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--'} - {item.location}
           </Text>
         </View>
       </View>

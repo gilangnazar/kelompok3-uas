@@ -13,7 +13,7 @@ export default function MaterialTab({ materials, navigation, courseId }: any) {
       let dateKey = 'General';
       if (item.uploaded_at) {
           dateKey = new Date(item.uploaded_at).toLocaleDateString('en-GB', {
-            day: '2-digit', month: 'long', year: 'numeric'
+            day: '2-digit', month: 'short', year: 'numeric'
           });
       }
 

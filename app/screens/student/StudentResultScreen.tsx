@@ -316,7 +316,7 @@ const StudentResultScreen = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="calendar-outline" size={16} color="#666" />
             <Text style={[styles.detailText, { marginLeft: 4 }]}>
-              {data?.completed_at ? new Date(data.completed_at).toLocaleDateString() : '-'}
+              {data?.completed_at ? new Date(data.completed_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
             </Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>

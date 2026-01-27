@@ -214,10 +214,10 @@ INSERT INTO materials (course_id, title, content, file_path) VALUES
 (2, 'ERD Diagram', 'Entity Relationship Diagram .', '/uploads/materials/erd_diagram.pdf');
 
 INSERT INTO assignments (course_id, title, description, due_date, type) VALUES 
-(1, 'Tugas 1: Buat halaman HTML', 'Buat halaman profil pribadi.', '2026-01-27 23:59:00', 
+(1, 'Tugas 1: Buat halaman HTML', 'Buat halaman profil pribadi.', '2026-01-27 23:59:59', 
 'assignment'), 
-(1, 'Quiz 1: HTML & CSS', 'Jawab soal pilihan ganda.', '2026-02-03 23:59:00', 'quiz'), 
-(2, 'Tugas 1: Desain ERD', 'Buat ERD dari studi kasus toko.', '2026-02-14 23:59:00', 
+(1, 'Quiz 1: HTML & CSS', 'Jawab soal pilihan ganda.', '2026-02-03 23:59:59', 'quiz'), 
+(2, 'Tugas 1: Desain ERD', 'Buat ERD dari studi kasus toko.', '2026-02-14 23:59:59', 
 'assignment');
 
 INSERT INTO submissions (assignment_id, student_id, content, file_path, score, 
@@ -279,13 +279,3 @@ INSERT INTO options (id, question_id, option_text, is_correct) VALUES
 (18, 5, '#demo', TRUE),
 (19, 5, '*demo', FALSE),
 (20, 5, 'demo', FALSE);
-
-INSERT INTO quiz_attempts (student_id, quiz_id, score, status) VALUES 
-(3, 1, 80, 'finished');
-
-INSERT INTO attempt_answers (student_id, question_id, selected_option_id) VALUES 
-(3, 1, 1),
-(3, 2, 7),
-(3, 3, 10),
-(3, 4, 15),
-(3, 5, 17);

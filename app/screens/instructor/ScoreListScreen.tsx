@@ -151,7 +151,7 @@ const ScoreListScreen = () => {
           if (Platform.OS === 'android') {
             const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
             if (!permissions.granted) {
-              Alert.alert('Cancelled', 'Akses penyimpanan ditolak.');
+              Alert.alert('Cancelled', 'Storage access was denied.');
               return;
             }
 
@@ -171,7 +171,7 @@ const ScoreListScreen = () => {
             await FileSystem.writeAsStringAsync(createdUri, base64, {
               encoding: FileSystem.EncodingType.Base64
             });
-            Alert.alert('Success', 'File berhasil disimpan di folder yang dipilih.');
+            Alert.alert('Success', 'File saved to the selected folder.');
             return;
           }
 
@@ -221,8 +221,10 @@ const ScoreListScreen = () => {
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    const pad2 = (n: number) => String(n).padStart(2, '0');
-    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())} ${pad2(date.getHours())}:${pad2(date.getMinutes())}:${pad2(date.getSeconds())}`;
+    if (isNaN(date.getTime())) return dateString;
+    const datePart = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timePart = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    return `${datePart} ${timePart}`;
   };
 
   const renderItem = ({ item }: { item: any }) => (
@@ -288,9 +290,9 @@ const ScoreListScreen = () => {
       <AppModal
         visible={sessionExpiredVisible}
         title="Session Expired"
-        message="Sesi Anda telah habis. Silakan login ulang."
+        message="Your session has expired. Please log in again."
         variant="error"
-        confirmText="Login"
+        confirmText="Log In"
         onConfirm={handleSessionConfirm}
       />
       <StatusBar barStyle="light-content" backgroundColor="#003366" />

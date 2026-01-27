@@ -122,12 +122,12 @@ export default function StudentDashboard() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
   };
 
   const openCoursePicker = async (tab: 'assignment' | 'schedule') => {
@@ -233,7 +233,8 @@ export default function StudentDashboard() {
                     <View style={{ flex: 1 }}>
                       <Text style={styles.courseName}>{course.name}</Text>
                       <Text style={styles.courseMeta}>
-                        {course.start_date ? new Date(course.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '-'} - 
+                        {course.start_date ? new Date(course.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                        {' - '}
                         {course.end_date ? new Date(course.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                       </Text>
                     </View>
@@ -267,7 +268,7 @@ export default function StudentDashboard() {
               </View>
               {/* Logout button removed as it moved to Profile Screen */}
               <View style={styles.dateBadge}>
-                 <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}</Text>
+                 <Text style={styles.dateText}>{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Text>
               </View>
             </View>
           </View>
@@ -316,7 +317,7 @@ export default function StudentDashboard() {
                 data.upcoming_schedules.map((item) => (
                   <View key={item.id} style={styles.scheduleItem}>
                     <View style={styles.dateBox}>
-                      <Text style={styles.dateMonth}>{new Date(item.session_date).toLocaleDateString('en-US', { month: 'short' })}</Text>
+                      <Text style={styles.dateMonth}>{new Date(item.session_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</Text>
                       <Text style={styles.dateDay}>{new Date(item.session_date).getDate()}</Text>
                     </View>
                     <View style={styles.itemContent}>

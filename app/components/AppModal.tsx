@@ -27,7 +27,7 @@ export default function AppModal({
   message,
   variant = 'confirm',
   confirmText = 'OK',
-  cancelText = 'Batal',
+  cancelText = 'Cancel',
   showCancel = false,
   onConfirm,
   onCancel

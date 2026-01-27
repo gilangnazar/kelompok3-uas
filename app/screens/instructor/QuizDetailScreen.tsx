@@ -159,9 +159,9 @@ const QuizDetailScreen = () => {
       <AppModal
         visible={sessionExpiredVisible}
         title="Session Expired"
-        message="Sesi Anda telah habis. Silakan login ulang."
+        message="Your session has expired. Please log in again."
         variant="error"
-        confirmText="Login"
+        confirmText="Log In"
         onConfirm={handleSessionConfirm}
       />
       <StatusBar barStyle="light-content" backgroundColor="#003366" />
@@ -200,7 +200,7 @@ const QuizDetailScreen = () => {
                 <View style={styles.metaItem}>
                     <Ionicons name="calendar-outline" size={16} color="#666" />
                     <Text style={styles.metaText}>
-                        Due: {quiz.due_date ? new Date(quiz.due_date).toLocaleDateString() : '-'}
+                        Due: {quiz.due_date ? new Date(quiz.due_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
                     </Text>
                 </View>
             </View>

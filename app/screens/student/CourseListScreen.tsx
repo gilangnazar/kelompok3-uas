@@ -105,7 +105,8 @@ const CourseListScreen = () => {
         <View style={styles.footerItem}>
           <Ionicons name="calendar-outline" size={16} color="#666" />
           <Text style={styles.footerText}>
-            {item.start_date ? new Date(item.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''} -
+            {item.start_date ? new Date(item.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
+            {' - '}
             {item.end_date ? new Date(item.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
           </Text>
         </View>

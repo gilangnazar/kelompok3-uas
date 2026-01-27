@@ -167,12 +167,12 @@ export default function InstructorDashboard() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+    return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
   };
 
   const renderHeaderStat = (label: string, value: string | number, icon: keyof typeof Ionicons.glyphMap, color: string = COLORS.primary) => (
@@ -192,9 +192,9 @@ export default function InstructorDashboard() {
       <AppModal
         visible={sessionExpiredVisible}
         title="Session Expired"
-        message="Sesi Anda telah habis. Silakan login ulang."
+        message="Your session has expired. Please log in again."
         variant="error"
-        confirmText="Login"
+        confirmText="Log In"
         onConfirm={handleSessionConfirm}
       />
       <Modal
@@ -259,7 +259,7 @@ export default function InstructorDashboard() {
                 <Text style={styles.userName}>{userName}</Text>
               </View>
               <View style={styles.dateBadge}>
-                 <Text style={styles.dateText}>{new Date().toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}</Text>
+                 <Text style={styles.dateText}>{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</Text>
               </View>
             </View>
 

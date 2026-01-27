@@ -95,12 +95,12 @@ export default function CourseDetailScreen() {
             <View style={styles.dateBox}>
                 <Text style={styles.dateDay}>{item.session_date ? new Date(item.session_date).getDate() : '--'}</Text>
                 <Text style={styles.dateMonth}>
-                   {item.session_date ? new Date(item.session_date).toLocaleString('default', { month: 'short' }) : '--'}
+                   {item.session_date ? new Date(item.session_date).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '--'}
                 </Text>
             </View>
             <View style={{flex: 1, marginLeft: 16}}>
                 <Text style={styles.cardTitle}>{item.session_topic}</Text>
-                <Text style={styles.cardSubtitle}>{new Date(item.session_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • {item.location}</Text>
+                <Text style={styles.cardSubtitle}>{new Date(item.session_date).toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', hour12: false})} • {item.location}</Text>
             </View>
         </View>
     </View>
@@ -155,9 +155,9 @@ export default function CourseDetailScreen() {
       <AppModal
         visible={sessionExpiredVisible}
         title="Session Expired"
-        message="Sesi Anda telah habis. Silakan login ulang."
+        message="Your session has expired. Please log in again."
         variant="error"
-        confirmText="Login"
+        confirmText="Log In"
         onConfirm={handleSessionConfirm}
       />
       <View style={styles.header}>
