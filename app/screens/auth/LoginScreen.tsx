@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../../../config/api';
 import AppModal from '../../components/AppModal';
 
@@ -23,6 +24,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -126,14 +128,24 @@ export default function LoginScreen() {
 
               <View style={styles.field}>
                 <Text style={styles.label}>Password</Text>
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder='********'
-                  placeholderTextColor='#9CA3AF'
-                  secureTextEntry
-                  style={styles.input}
-                />
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder='********'
+                    placeholderTextColor='#9CA3AF'
+                    secureTextEntry={!showPassword}
+                    style={styles.inputGroupInput}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(prev => !prev)}
+                    style={styles.eyeButton}
+                    accessibilityRole='button'
+                    accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color='#6B7280' />
+                  </TouchableOpacity>
+                </View>
               </View>
 
               <TouchableOpacity
@@ -242,6 +254,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#111827',
     backgroundColor: '#FFFFFF'
+  },
+  inputGroup: {
+    height: 52,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14
+  },
+  inputGroupInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 14,
+    color: '#111827',
+    paddingRight: 8
+  },
+  eyeButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 4
   },
 
   primaryBtn: {

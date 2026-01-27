@@ -24,6 +24,8 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -128,25 +130,49 @@ export default function RegisterScreen() {
               </Field>
 
               <Field label='Password'>
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder='********'
-                  placeholderTextColor='#9CA3AF'
-                  secureTextEntry
-                  style={styles.input}
-                />
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder='********'
+                    placeholderTextColor='#9CA3AF'
+                    secureTextEntry={!showPassword}
+                    style={styles.inputGroupInput}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(prev => !prev)}
+                    style={styles.eyeButton}
+                    accessibilityRole='button'
+                    accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color='#6B7280' />
+                  </TouchableOpacity>
+                </View>
               </Field>
 
               <Field label='Confirm Password'>
-                <TextInput
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  placeholder='********'
-                  placeholderTextColor='#9CA3AF'
-                  secureTextEntry
-                  style={styles.input}
-                />
+                <View style={styles.inputGroup}>
+                  <TextInput
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    placeholder='********'
+                    placeholderTextColor='#9CA3AF'
+                    secureTextEntry={!showConfirmPassword}
+                    style={styles.inputGroupInput}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowConfirmPassword(prev => !prev)}
+                    style={styles.eyeButton}
+                    accessibilityRole='button'
+                    accessibilityLabel={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Ionicons
+                      name={showConfirmPassword ? 'eye-off' : 'eye'}
+                      size={20}
+                      color='#6B7280'
+                    />
+                  </TouchableOpacity>
+                </View>
               </Field>
 
               <TouchableOpacity
@@ -262,6 +288,30 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#111827',
     backgroundColor: '#FFFFFF'
+  },
+  inputGroup: {
+    height: 52,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14
+  },
+  inputGroupInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 14,
+    color: '#111827',
+    paddingRight: 8
+  },
+  eyeButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 4
   },
 
   primaryBtn: {
