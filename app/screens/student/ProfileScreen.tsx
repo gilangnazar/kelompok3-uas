@@ -84,7 +84,7 @@ export default function ProfileScreen() {
   const navItems =
       [
         { key: 'home', label: 'Home', icon: 'home', onPress: () => router.replace('/screens/student/StudentDashboard') },
-        { key: 'courses', label: 'Courses', icon: 'book' },
+        { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.push('/screens/student/CourseListScreen') },
         { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
         { key: 'profile', label: 'Profile', icon: 'person', onPress: () => {} }
       ];

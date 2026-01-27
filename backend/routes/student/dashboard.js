@@ -47,7 +47,13 @@ router.get('/', authenticateToken, async (req, res) => {
             FROM assignments a
             JOIN enrollments e ON a.course_id = e.course_id
             LEFT JOIN submissions s ON a.id = s.assignment_id AND s.student_id = ?
-            WHERE e.student_id = ? AND s.id IS NULL
+            LEFT JOIN quizzes q ON q.assignment_id = a.id
+            LEFT JOIN quiz_attempts qa ON qa.quiz_id = q.id AND qa.student_id = ? AND qa.status = 'finished'
+            WHERE e.student_id = ?
+              AND (
+                (a.type = 'assignment' AND s.id IS NULL)
+                OR (a.type = 'quiz' AND qa.id IS NULL)
+              )
         `;
 
         // 5. List: Upcoming Schedules (Next 7 days)
@@ -65,12 +71,18 @@ router.get('/', authenticateToken, async (req, res) => {
 
         // 6. List: Pending Assignments Data (Top 3 nearest deadline)
         const pendingAssignmentsListQuery = `
-            SELECT a.id, a.title, a.due_date, c.title as course_title, a.type
+            SELECT a.id, a.title, a.due_date, c.id as course_id, c.title as course_title, a.type
             FROM assignments a
             JOIN courses c ON a.course_id = c.id
             JOIN enrollments e ON c.id = e.course_id
             LEFT JOIN submissions s ON a.id = s.assignment_id AND s.student_id = ?
-            WHERE e.student_id = ? AND s.id IS NULL
+            LEFT JOIN quizzes q ON q.assignment_id = a.id
+            LEFT JOIN quiz_attempts qa ON qa.quiz_id = q.id AND qa.student_id = ? AND qa.status = 'finished'
+            WHERE e.student_id = ?
+              AND (
+                (a.type = 'assignment' AND s.id IS NULL)
+                OR (a.type = 'quiz' AND qa.id IS NULL)
+              )
             ORDER BY a.due_date ASC
             LIMIT 3
         `;
@@ -89,9 +101,9 @@ router.get('/', authenticateToken, async (req, res) => {
             db.query(attendanceQuery, [studentId]),
             db.query(totalAssignmentsQuery, [studentId]),
             db.query(totalSubmissionsQuery, [studentId]),
-            db.query(pendingAssignmentsCountQuery, [studentId, studentId]),
+            db.query(pendingAssignmentsCountQuery, [studentId, studentId, studentId]),
             db.query(upcomingSchedulesQuery, [studentId]),
-            db.query(pendingAssignmentsListQuery, [studentId, studentId])
+            db.query(pendingAssignmentsListQuery, [studentId, studentId, studentId])
         ]);
 
         res.json({

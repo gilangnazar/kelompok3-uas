@@ -52,6 +52,16 @@ export default function RootLayout() {
       />
 
       <Stack.Screen
+        name="screens/student/CourseListScreen"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="screens/student/CourseDetailScreen"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
         name="screens/instructor/InstructorDashboard"
         options={{ title: 'Instructor', headerTitleAlign: 'center' }}
       />
@@ -105,6 +115,17 @@ export default function RootLayout() {
           gestureEnabled: false
         }}
       />
+
+      <Stack.Screen
+        name="screens/student/QuizDetailScreen"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="screens/student/StudentResultScreen"
+        options={{ headerShown: false }}
+      />
+
     </Stack>
   );
 }

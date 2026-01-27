@@ -200,10 +200,8 @@ INSERT INTO users (name, email, password, role, status) VALUES
 
 INSERT INTO courses (title, description, teacher_id, status, start_date, end_date) 
 VALUES 
-('Pemrograman Web', 'Dasar-dasar HTML, CSS, JS dan backend.', 2, 'active', 
-'2025-07-01', '2025-09-30'), 
-('Basis Data', 'Konsep ERD dan implementasi MySQL.', 2, 'active', '2025-07-01', 
-'2025-09-30');
+('Pemrograman Web', 'Dasar-dasar HTML, CSS, JS dan backend.', 2, 'active', '2026-01-01', '2026-06-30'), 
+('Basis Data', 'Konsep ERD dan implementasi MySQL.', 2, 'active', '2026-01-01', '2026-06-30');
 
 INSERT INTO enrollments (student_id, course_id) VALUES 
 (3, 1), 
@@ -216,10 +214,10 @@ INSERT INTO materials (course_id, title, content, file_path) VALUES
 (2, 'ERD Diagram', 'Entity Relationship Diagram .', '/uploads/materials/erd_diagram.pdf');
 
 INSERT INTO assignments (course_id, title, description, due_date, type) VALUES 
-(1, 'Tugas 1: Buat halaman HTML', 'Buat halaman profil pribadi.', '2025-07-10 23:59:00', 
+(1, 'Tugas 1: Buat halaman HTML', 'Buat halaman profil pribadi.', '2026-01-27 23:59:00', 
 'assignment'), 
-(1, 'Quiz 1: HTML & CSS', 'Jawab soal pilihan ganda.', '2025-07-15 23:59:00', 'quiz'), 
-(2, 'Tugas 1: Desain ERD', 'Buat ERD dari studi kasus toko.', '2025-07-12 23:59:00', 
+(1, 'Quiz 1: HTML & CSS', 'Jawab soal pilihan ganda.', '2026-02-03 23:59:00', 'quiz'), 
+(2, 'Tugas 1: Desain ERD', 'Buat ERD dari studi kasus toko.', '2026-02-14 23:59:00', 
 'assignment');
 
 INSERT INTO submissions (assignment_id, student_id, content, file_path, score, 
@@ -235,9 +233,9 @@ INSERT INTO discussions (course_id, user_id, message) VALUES
 (2, 3, 'Saya bingung dengan cardinality di ERD.');
 
 INSERT INTO schedules (course_id, session_topic, session_date, location) VALUES 
-(1, 'Pengantar HTML', '2025-07-02 08:00:00', 'Zoom 01'), 
-(1, 'CSS Dasar', '2025-07-05 08:00:00', 'Zoom 01'), 
-(2, 'Pengenalan ERD', '2025-07-03 08:00:00', 'Zoom 02');
+(1, 'Pengantar HTML', '2026-01-21 20:00:00', 'Zoom 01'), 
+(1, 'CSS Dasar', '2026-01-28 20:00:00', 'Zoom 01'), 
+(2, 'Pengenalan ERD', '2026-01-29 20:00:00', 'Zoom 02');
 
 INSERT INTO attendances (schedule_id, student_id, status) VALUES 
 (1, 3, 'present'), 
@@ -283,17 +281,11 @@ INSERT INTO options (id, question_id, option_text, is_correct) VALUES
 (20, 5, 'demo', FALSE);
 
 INSERT INTO quiz_attempts (student_id, quiz_id, score, status) VALUES 
-(3, 1, 80, 'finished'),
-(4, 1, 100, 'finished');
+(3, 1, 80, 'finished');
 
 INSERT INTO attempt_answers (student_id, question_id, selected_option_id) VALUES 
 (3, 1, 1),
 (3, 2, 7),
 (3, 3, 10),
 (3, 4, 15),
-(3, 5, 17),
-(4, 1, 1),
-(4, 2, 7),
-(4, 3, 10),
-(4, 4, 15),
-(4, 5, 18);
+(3, 5, 17);

@@ -5,18 +5,33 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function QuizReadyScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { quizId, quizTitle, questionCount, timeLimit } = params;
+  const { assignmentId, quizId, quizTitle, questionCount, timeLimit, timeLimitMinutes, classId, className } = params;
 
   const handleStartQuiz = () => {
     router.push({
       pathname: '/screens/student/QuizTakeScreen',
       params: {
+        assignmentId,
         quizId,
         quizTitle,
         questionCount,
-        timeLimit
+        timeLimit,
+        timeLimitMinutes,
+        classId,
+        className
       }
     });
+  };
+
+  const handleCancel = () => {
+    if (assignmentId) {
+      router.replace({
+        pathname: '/screens/student/QuizDetailScreen',
+        params: { assignmentId, classId, className }
+      });
+      return;
+    }
+    router.back();
   };
 
   return (
@@ -44,9 +59,30 @@ export default function QuizReadyScreen() {
           <Text style={styles.readyText}>Are you ready?</Text>
         </View>
 
-        <TouchableOpacity style={styles.startButton} onPress={handleStartQuiz}>
-          <Text style={styles.startButtonText}>Start Quiz</Text>
-        </TouchableOpacity>
+        <View style={styles.rulesCard}>
+          <Text style={styles.rulesTitle}>Quiz Rules</Text>
+          <View style={styles.ruleItem}>
+            <Text style={styles.ruleBullet}>•</Text>
+            <Text style={styles.ruleText}>Do not leave or minimize the app. Your quiz will be auto-submitted.</Text>
+          </View>
+          <View style={styles.ruleItem}>
+            <Text style={styles.ruleBullet}>•</Text>
+            <Text style={styles.ruleText}>Back and refresh are disabled during the quiz.</Text>
+          </View>
+          <View style={styles.ruleItem}>
+            <Text style={styles.ruleBullet}>•</Text>
+            <Text style={styles.ruleText}>Time runs continuously until it ends.</Text>
+          </View>
+        </View>
+
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.startButton} onPress={handleStartQuiz}>
+            <Text style={styles.startButtonText}>Start Quiz</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -110,7 +146,66 @@ const styles = StyleSheet.create({
     color: '#1a1a1a',
     textAlign: 'center'
   },
+  rulesCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3
+  },
+  rulesTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    marginBottom: 8
+  },
+  ruleItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 6
+  },
+  ruleBullet: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#007AFF',
+    marginRight: 6,
+    marginTop: 1
+  },
+  ruleText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#555',
+    lineHeight: 18
+  },
+  startButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingVertical: 18,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#007AFF'
+  },
+  cancelButtonText: {
+    color: '#007AFF',
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
   startButton: {
+    flex: 1,
     backgroundColor: '#007AFF',
     paddingVertical: 18,
     borderRadius: 12,
@@ -120,10 +215,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5
-  },
-  startButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold'
   }
 });

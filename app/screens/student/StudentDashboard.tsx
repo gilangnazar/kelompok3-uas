@@ -1,22 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  TouchableOpacity, 
-  ScrollView, 
-  RefreshControl, 
-  ActivityIndicator,
-  Alert,
-  StatusBar,
-  Dimensions
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  RefreshControl,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
-import BottomNavigator from '../../components/navigation/BottomNavigator';
 import { API_URL } from '../../../config/api';
+import AppModal from '../../components/AppModal';
+import BottomNavigator from '../../components/navigation/BottomNavigator';
 
 const { width } = Dimensions.get('window');
 
@@ -52,6 +53,7 @@ interface DashboardData {
     id: number;
     title: string;
     due_date: string;
+    course_id: number;
     course_title: string;
     type: 'quiz' | 'assignment';
   }>;
@@ -63,6 +65,12 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState<DashboardData | null>(null);
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [coursePickerVisible, setCoursePickerVisible] = useState(false);
+  const [coursePickerTab, setCoursePickerTab] = useState<'assignment' | 'schedule'>('assignment');
+  const [courses, setCourses] = useState<any[]>([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -95,7 +103,8 @@ export default function StudentDashboard() {
       setData(json);
     } catch (error) {
       console.error('Fetch error:', error);
-      Alert.alert('Error', 'Failed to load dashboard data');
+      setErrorMessage('Failed to load dashboard data');
+      setErrorVisible(true);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -121,6 +130,49 @@ export default function StudentDashboard() {
     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const openCoursePicker = async (tab: 'assignment' | 'schedule') => {
+    setCoursePickerTab(tab);
+    setCoursePickerVisible(true);
+    if (courses.length === 0) {
+      await fetchCourses();
+    }
+  };
+
+  const fetchCourses = async () => {
+    try {
+      setCoursesLoading(true);
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        router.replace('/screens/auth/LoginScreen');
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/student/courses`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        await AsyncStorage.multiRemove(['token', 'user']);
+        router.replace('/screens/auth/LoginScreen');
+        return;
+      }
+
+      if (response.ok) {
+        const json = await response.json();
+        setCourses(json || []);
+      } else {
+        setErrorMessage('Failed to load courses.');
+        setErrorVisible(true);
+      }
+    } catch (error) {
+      console.error('Fetch courses error:', error);
+      setErrorMessage('Network error.');
+      setErrorVisible(true);
+    } finally {
+      setCoursesLoading(false);
+    }
+  };
+
   const renderStatsCard = (title: string, value: string, icon: keyof typeof Ionicons.glyphMap, color: string) => (
     <View style={styles.card}>
       <View style={[styles.iconContainer, { backgroundColor: color + '15' }]}>
@@ -136,6 +188,65 @@ export default function StudentDashboard() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={COLORS.primary} />
+      <AppModal
+        visible={errorVisible}
+        title="Error"
+        message={errorMessage}
+        variant="error"
+        confirmText="OK"
+        onConfirm={() => setErrorVisible(false)}
+      />
+      <Modal transparent visible={coursePickerVisible} animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Course</Text>
+              <TouchableOpacity onPress={() => setCoursePickerVisible(false)}>
+                <Ionicons name="close" size={20} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+            {coursesLoading ? (
+              <View style={styles.modalLoading}>
+                <ActivityIndicator size="small" color={COLORS.primary} />
+              </View>
+            ) : (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {courses.map((course) => (
+                  <TouchableOpacity
+                    key={course.id}
+                    style={styles.courseItem}
+                    onPress={() => {
+                      setCoursePickerVisible(false);
+                      router.push({
+                        pathname: '/screens/student/CourseDetailScreen',
+                        params: {
+                          classId: course.id,
+                          className: course.name,
+                          tab: coursePickerTab
+                        }
+                      });
+                    }}
+                  >
+                    <View style={styles.courseIcon}>
+                      <Ionicons name="book" size={16} color={COLORS.primary} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.courseName}>{course.name}</Text>
+                      <Text style={styles.courseMeta}>
+                        {course.start_date ? new Date(course.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '-'} - 
+                        {course.end_date ? new Date(course.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+                {courses.length === 0 && !coursesLoading ? (
+                  <Text style={styles.emptyTextModal}>No courses found.</Text>
+                ) : null}
+              </ScrollView>
+            )}
+          </View>
+        </View>
+      </Modal>
       
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -173,7 +284,7 @@ export default function StudentDashboard() {
                 COLORS.success
               )}
               {renderStatsCard(
-                'Pending', 
+                'Pending Assignments', 
                 data?.stats?.pending_tasks?.toString() || '0', 
                 'time', 
                 COLORS.warning
@@ -196,7 +307,7 @@ export default function StudentDashboard() {
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Upcoming Schedule</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => openCoursePicker('schedule')}>
                   <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
               </View>
@@ -235,24 +346,44 @@ export default function StudentDashboard() {
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Pending Assignments</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => openCoursePicker('assignment')}>
                   <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
               </View>
 
               {data?.pending_assignments && data.pending_assignments.length > 0 ? (
                 data.pending_assignments.map((item) => (
-                  <View key={item.id} style={styles.assignmentItem}>
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={item.type === 'quiz' ? 0.8 : 1}
+                    onPress={() => {
+                      if (item.type === 'quiz') {
+                        router.push({
+                          pathname: '/screens/student/QuizDetailScreen',
+                          params: { assignmentId: item.id, classId: item.course_id, className: item.course_title }
+                        });
+                      }
+                    }}
+                  >
+                    <View style={styles.assignmentItem}>
                     <View style={[styles.typeIndicator, { backgroundColor: item.type === 'quiz' ? '#EF4444' : '#3B82F6' }]} />
                     <View style={{ flex: 1, paddingVertical: 12, paddingRight: 12 }}>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
                         <Text style={styles.categoryLabel}>{item.type === 'quiz' ? 'Quiz' : 'Assignment'}</Text>
-                        <Text style={styles.dueLabel}>Due {formatDate(item.due_date)}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                          {item.due_date && new Date(item.due_date).getTime() < Date.now() && (
+                            <View style={styles.overdueBadge}>
+                              <Text style={styles.overdueText}>Overdue</Text>
+                            </View>
+                          )}
+                          <Text style={styles.dueLabel}>Due {formatDate(item.due_date)}</Text>
+                        </View>
                       </View>
                       <Text style={styles.itemTitle}>{item.title}</Text>
                       <Text style={styles.itemSubtitle}>{item.course_title}</Text>
                     </View>
                   </View>
+                  </TouchableOpacity>
                 ))
               ) : (
                 <View style={styles.emptyState}>
@@ -273,7 +404,7 @@ export default function StudentDashboard() {
             icon: 'home', 
             onPress: () => {} // Already here 
           },
-          { key: 'courses', label: 'Courses', icon: 'book' },
+          { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.push('/screens/student/CourseListScreen') },
           { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
           { 
             key: 'profile', 
@@ -502,6 +633,17 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#EF4444',
   },
+  overdueBadge: {
+    backgroundColor: '#DC2626',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10
+  },
+  overdueText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: '700'
+  },
 
   // Empty State
   emptyState: {
@@ -513,5 +655,64 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontSize: 14,
     fontStyle: 'italic',
+  }
+  ,
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.45)',
+    justifyContent: 'center',
+    padding: 24
+  },
+  modalCard: {
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 16,
+    maxHeight: '70%'
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: COLORS.textMain
+  },
+  modalLoading: {
+    paddingVertical: 24,
+    alignItems: 'center'
+  },
+  courseItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6'
+  },
+  courseIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12
+  },
+  courseName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.textMain
+  },
+  courseMeta: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginTop: 2
+  },
+  emptyTextModal: {
+    textAlign: 'center',
+    color: COLORS.textSecondary,
+    paddingVertical: 12
   }
 });

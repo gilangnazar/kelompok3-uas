@@ -223,9 +223,6 @@ const StudentResultScreen = () => {
             if (isUserAnswer) {
               optionStyle = [styles.optionBox, isCorrectAnswer ? styles.optionUserCorrect : styles.optionUserWrong];
               textStyle = [styles.optionText, styles.textWhite];
-            } else if (!q.isCorrect && isCorrectAnswer) {
-                optionStyle = [styles.optionBox, styles.optionCorrectShow];
-                textStyle = [styles.optionText, styles.textGreen];
             }
 
             return (
@@ -527,11 +524,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#DC3545',
     borderColor: '#DC3545',
   },
-  optionCorrectShow: {
-    borderColor: '#28A745',
-    backgroundColor: '#F0FFF4',
-    borderWidth: 2,
-  },
   optionText: {
     fontSize: 14,
     color: '#555',
@@ -539,10 +531,6 @@ const styles = StyleSheet.create({
   textWhite: {
     color: '#fff',
     fontWeight: '600',
-  },
-  textGreen: {
-    color: '#28A745',
-    fontWeight: 'bold',
   },
   feedbackBox: {
     marginTop: 10,

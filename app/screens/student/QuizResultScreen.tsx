@@ -1,30 +1,116 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../../config/api';
+import AppModal from '../../components/AppModal';
 
 export default function QuizResultScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { quizTitle, score, correctCount, totalQuestions } = params;
+  const { assignmentId, quizId, quizTitle, classId, className } = params;
 
-  const scoreNumber = Number(score);
-  const correctNumber = Number(correctCount);
-  const totalNumber = Number(totalQuestions);
+  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState<{ attemptId: number; assignmentId?: number; score: number; correctCount: number; totalQuestions: number } | null>(null);
+  const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false);
+
+  const handleSessionConfirm = async () => {
+    setSessionExpiredVisible(false);
+    await AsyncStorage.multiRemove(['token', 'user']);
+    router.replace('/screens/auth/LoginScreen');
+  };
+
+  useEffect(() => {
+    fetchResult();
+  }, [quizId]);
+
+  const fetchResult = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        setSessionExpiredVisible(true);
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/student/quizzes/${quizId}/result`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        setSessionExpiredVisible(true);
+        return;
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        setResult({
+          attemptId: Number(data.attempt_id),
+          assignmentId: data.assignment_id ? Number(data.assignment_id) : undefined,
+          score: Number(data.score),
+          correctCount: Number(data.correctCount),
+          totalQuestions: Number(data.totalQuestions)
+        });
+      } else {
+        setResult(null);
+      }
+    } catch (error) {
+      console.error('Error fetching quiz result:', error);
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const scoreNumber = Number(result?.score || 0);
+  const correctNumber = Number(result?.correctCount || 0);
+  const totalNumber = Number(result?.totalQuestions || 0);
   const isPassed = scoreNumber >= 60;
 
-  const handleBackToQuizzes = () => {
-    // Go back to quiz list (2 screens back)
-    router.back();
+  const handleBackToQuiz = () => {
+    const targetAssignmentId = assignmentId || result?.assignmentId;
+    if (targetAssignmentId) {
+      router.replace({
+        pathname: '/screens/student/QuizDetailScreen',
+        params: { assignmentId: targetAssignmentId, classId, className }
+      });
+      return;
+    }
     router.back();
   };
 
-  const handleBackToHome = () => {
-    // Go back to home screen
-    router.replace('/');
+  const handleSeeDetail = () => {
+    if (!result?.attemptId) return;
+    router.push({
+      pathname: '/screens/student/StudentResultScreen',
+      params: {
+        attemptId: result.attemptId,
+        quizId,
+        quizTitle,
+        classId,
+        className
+      }
+    });
   };
 
   return (
     <View style={styles.container}>
+      <AppModal
+        visible={sessionExpiredVisible}
+        title="Session Expired"
+        message="Your session has expired. Please log in again."
+        variant="error"
+        confirmText="Log In"
+        onConfirm={handleSessionConfirm}
+      />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>
+      ) : !result ? (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.emptyText}>Result not found.</Text>
+        </View>
+      ) : (
       <View style={styles.content}>
         {/* Score Circle */}
         <View
@@ -86,19 +172,20 @@ export default function QuizResultScreen() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.primaryButton}
-            onPress={handleBackToQuizzes}
+            onPress={handleSeeDetail}
           >
-            <Text style={styles.primaryButtonText}>Back to Quizzes</Text>
+            <Text style={styles.primaryButtonText}>See Detail</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.secondaryButton}
-            onPress={handleBackToHome}
+            onPress={handleBackToQuiz}
           >
-            <Text style={styles.secondaryButtonText}>Back to Home</Text>
+            <Text style={styles.secondaryButtonText}>Back To Quiz</Text>
           </TouchableOpacity>
         </View>
       </View>
+      )}
     </View>
   );
 }
@@ -107,6 +194,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5'
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  emptyText: {
+    color: '#666',
+    fontSize: 14
   },
   content: {
     flex: 1,
