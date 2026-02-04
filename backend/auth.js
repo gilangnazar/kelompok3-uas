@@ -20,7 +20,7 @@ router.get('/me', authenticateToken, async (req, res) => {
     }
 });
 
-// Register (Hanya untuk Student)
+// Register (Only for Student)
 router.post('/register', async (req, res) => {
     console.log('Register Request Body:', req.body);
     const { name, email, password } = req.body; 
@@ -29,7 +29,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Selalu set sebagai 'student' untuk registrasi mandiri
+    // Always set as 'student' for self-registration
     const userRole = 'student';
 
     try {
