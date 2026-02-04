@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const db = require('./db');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'secret_key_change_me';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = require('./middleware/authMiddleware'); // Import middleware
 
