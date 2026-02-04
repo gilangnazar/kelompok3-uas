@@ -156,9 +156,19 @@ npm install
 4. Click **Choose File** and select the `database/init.sql` file located in the project folder.
 5. Click **Go** to execute the SQL script. This will create the database, tables, and seed it with initial data.
 
-### 4. Configuration
-You need to point the frontend application to your local backend server.
+### 4. Environment Configuration
+Before running the backend, you must set up the environment variables:
+1. Navigate to the `backend` folder.
+2. Copy `.env.example` to a new file named `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   *(Or manually copy the file and rename it in your file explorer)*.
+3. Open `.env` and ensure the database credentials match your local setup.
+4. (Optional) You can change the `JWT_SECRET` and `PORT` if needed.
 
+### 5. Frontend API Configuration
+You need to point the frontend application to your local backend server.
 1. Open a command prompt (`cmd`) and type:
    ```bash
    ipconfig
@@ -171,7 +181,7 @@ You need to point the frontend application to your local backend server.
    ```
    *Example: `export const API_URL = 'http://192.168.1.10:3000';`*
 
-### 5. Running the Application
+### 6. Running the Application
 
 **Step 1: Start the Backend**
 Open the terminal where you are inside the `backend` folder and run:
