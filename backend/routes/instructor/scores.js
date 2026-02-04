@@ -3,7 +3,8 @@ const router = express.Router();
 const db = require('../../db');
 const authenticateToken = require('../../middleware/authMiddleware');
 
-// GET /api/instructor/scores/quiz/:quizId - Get all student scores for a specific quiz
+// GET /api/instructor/scores/quiz/:quizId - List student scores for a specific quiz
+// Used in: ScoreListScreen (Instructor)
 router.get('/quiz/:quizId', authenticateToken, async (req, res) => {
     try {
         const { quizId } = req.params;
@@ -30,7 +31,8 @@ router.get('/quiz/:quizId', authenticateToken, async (req, res) => {
     }
 });
 
-// GET /attempt/:attemptId - Get detailed results for a specific attempt
+// GET /api/instructor/scores/attempt/:attemptId - Get detailed quiz attempt for review
+// Used in: StudentResultScreen (Instructor)
 router.get('/attempt/:attemptId', authenticateToken, async (req, res) => {
     try {
         const { attemptId } = req.params;
@@ -54,7 +56,6 @@ router.get('/attempt/:attemptId', authenticateToken, async (req, res) => {
         const summary = attempts[0];
 
         // 2. Get Questions and Student's Answers
-        // We join questions with attempt_answers to see what the student selected
         const [questions] = await db.query(`
             SELECT 
                 q.id as question_id,
@@ -66,7 +67,7 @@ router.get('/attempt/:attemptId', authenticateToken, async (req, res) => {
             WHERE q.quiz_id = ?
         `, [attemptId, summary.quiz_id]);
 
-        // 3. For each question, get all options
+        // 3. Fetch all options and mark student selection
         for (const q of questions) {
             const [options] = await db.query(
                 'SELECT id, option_text, is_correct FROM options WHERE question_id = ?', 
@@ -74,7 +75,6 @@ router.get('/attempt/:attemptId', authenticateToken, async (req, res) => {
             );
             q.options = options;
             
-            // Check if selected answer was correct
             const selectedOpt = options.find(o => o.id === q.selected_option_id);
             q.isCorrect = selectedOpt ? selectedOpt.is_correct === 1 : false;
         }
@@ -90,7 +90,8 @@ router.get('/attempt/:attemptId', authenticateToken, async (req, res) => {
     }
 });
 
-// GET /attempt/:attemptId/export - Export detailed result
+// GET /api/instructor/scores/attempt/:attemptId/export - Export quiz attempt result as PDF
+// Used in: StudentResultScreen, ScoreListScreen (Instructor)
 router.get('/attempt/:attemptId/export', authenticateToken, async (req, res) => {
     try {
         const { attemptId } = req.params;

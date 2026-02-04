@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 
 export default function ScheduleTab({ schedules, navigation, courseId }: any) {
   
+  // Formats schedule date (DD Mon YYYY), with fallback for invalid dates
   const formatDateFull = (dateString: string) => {
     if (!dateString) return '-';
     // Handle mock data format YYYY-MM-DD

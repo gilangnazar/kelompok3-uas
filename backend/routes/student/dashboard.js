@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require('../../db');
 const authenticateToken = require('../../middleware/authMiddleware');
 
+// GET /api/student/dashboard - Get student dashboard stats and lists
+// Used in: StudentDashboard
 router.get('/', authenticateToken, async (req, res) => {
     const studentId = req.user.id;
 

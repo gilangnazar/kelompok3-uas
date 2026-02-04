@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 export default function AssignmentTab({ assignments, formatDate }: any) {
   const router = useRouter();
 
+  // Renders individual assignment or quiz card with status badge
   const renderItem = ({ item, index }: any) => {
     const isQuiz = item.type === 'quiz';
     

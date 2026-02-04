@@ -46,6 +46,7 @@ export default function CourseDetailScreen() {
 
       const headers = { 'Authorization': `Bearer ${token}` };
 
+      // Fetch all course content in parallel
       const [scheduleRes, materialRes, assignmentRes] = await Promise.all([
         fetch(`${API_URL}/api/student/course-content/${classId}/schedules`, { headers }),
         fetch(`${API_URL}/api/student/course-content/${classId}/materials`, { headers }),
@@ -145,6 +146,7 @@ export default function CourseDetailScreen() {
     let statusLabel = 'Pending';
     let statusStyle = styles.statusPending;
 
+    // Determine status: Pending, Submitted On Time, Submitted Late, or Overdue
     if (isSubmitted) {
       if (dueDate && completedAt && completedAt.getTime() > dueDate.getTime()) {
         statusLabel = 'Submitted Late';

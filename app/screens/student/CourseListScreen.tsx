@@ -40,6 +40,7 @@ const CourseListScreen = () => {
         return;
       }
 
+      // Fetch enrolled courses for the student
       const response = await fetch(`${API_URL}/api/student/courses`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -105,6 +106,7 @@ const CourseListScreen = () => {
         <View style={styles.footerItem}>
           <Ionicons name="calendar-outline" size={16} color="#666" />
           <Text style={styles.footerText}>
+            {/* Format start and end dates */}
             {item.start_date ? new Date(item.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
             {' - '}
             {item.end_date ? new Date(item.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}

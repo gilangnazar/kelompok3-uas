@@ -15,6 +15,7 @@ const CourseListScreen = () => {
   const [sessionExpiredVisible, setSessionExpiredVisible] = useState(false);
 
   const handleSessionConfirm = async () => {
+    // Clear session data and redirect to login when session expires
     setSessionExpiredVisible(false);
     await AsyncStorage.multiRemove(['token', 'user']);
     router.replace('/screens/auth/LoginScreen');
@@ -22,12 +23,14 @@ const CourseListScreen = () => {
 
   const fetchCourses = async () => {
     try {
+      // Retrieve auth token from storage
       const token = await AsyncStorage.getItem('token');
       if (!token) {
         setSessionExpiredVisible(true);
         return;
       }
 
+      // Fetch instructor's course list from API
       const response = await fetch(`${API_URL}/api/instructor/courses`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -91,6 +94,7 @@ const CourseListScreen = () => {
          <View style={styles.footerItem}>
             <Ionicons name="calendar-outline" size={16} color="#666" />
             <Text style={styles.footerText}>
+              {/* Format start and end dates to 'DD Mon YYYY' (e.g., 21 Jan 2026) */}
               {item.start_date ? new Date(item.start_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
               {' - '}
               {item.end_date ? new Date(item.end_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}

@@ -3,7 +3,8 @@ const router = express.Router();
 const db = require('../../db');
 const authenticateToken = require('../../middleware/authMiddleware');
 
-// POST /create - Create a new assignment (Quiz or Assignment)
+// POST /api/instructor/assignments/create - Create a new assignment or quiz
+// Used in: CreateAssignmentScreen
 router.post('/create', authenticateToken, async (req, res) => {
     const connection = await db.getConnection();
     try {
@@ -31,7 +32,7 @@ router.post('/create', authenticateToken, async (req, res) => {
                 for (const q of questions) {
                     const [qResult] = await connection.query(
                         'INSERT INTO questions (quiz_id, question_text, points) VALUES (?, ?, ?)',
-                        [quizId, q.text, 1] // Default 1 point per question for now
+                        [quizId, q.text, 1] // Default 1 point per question
                     );
                     const questionId = qResult.insertId;
 
@@ -61,7 +62,8 @@ router.post('/create', authenticateToken, async (req, res) => {
     }
 });
 
-// GET /:id - Get assignment details
+// GET /api/instructor/assignments/:id - Get detailed assignment info
+// Used in: QuizDetailScreen, CreateAssignmentScreen (Instructor)
 router.get('/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -77,7 +79,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
             [id]
         );
         
-        // Get total enrolled students for this course
+        // Get total enrolled students
         const [enrollment] = await db.query(
             'SELECT COUNT(*) as total_students FROM enrollments WHERE course_id = ?',
             [assignment.course_id]
@@ -102,7 +104,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
                 // Get Questions
                 const [questions] = await db.query('SELECT * FROM questions WHERE quiz_id = ?', [quiz.id]);
                 
-                // Get Options for all questions
+                // Get Options
                 for (const q of questions) {
                     const [options] = await db.query('SELECT id, option_text, is_correct FROM options WHERE question_id = ?', [q.id]);
                     q.options = options;
@@ -118,7 +120,8 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// DELETE /:id - Delete assignment
+// DELETE /api/instructor/assignments/:id - Remove assignment
+// Used in: CourseDetailScreen (Instructor) - (Implicitly or planned)
 router.delete('/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -130,7 +133,8 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// PUT /:id - Update assignment (and quiz details if applicable)
+// PUT /api/instructor/assignments/:id - Update assignment or quiz details
+// Used in: CreateAssignmentScreen
 router.put('/:id', authenticateToken, async (req, res) => {
     const connection = await db.getConnection();
     try {

@@ -8,7 +8,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret_key_change_me';
 
 const authenticateToken = require('./middleware/authMiddleware'); // Import middleware
 
-// GET /me (Get Current User Profile)
+// GET /api/auth/me - Get current user profile
+// Used in: All Screens (for role check), Splash Screen
 router.get('/me', authenticateToken, async (req, res) => {
     try {
         const [rows] = await db.query('SELECT id, name, email, role FROM users WHERE id = ?', [req.user.id]);
@@ -20,20 +21,20 @@ router.get('/me', authenticateToken, async (req, res) => {
     }
 });
 
-// Register (Only for Student)
+// POST /api/auth/register - Student registration
+// Used in: RegisterScreen
 router.post('/register', async (req, res) => {
-    console.log('Register Request Body:', req.body);
     const { name, email, password } = req.body; 
     
     if (!name || !email || !password) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Always set as 'student' for self-registration
+    // Default role for self-registration is student
     const userRole = 'student';
 
     try {
-        // Check if user exists
+        // Check for existing user
         const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         if (rows.length > 0) {
             return res.status(400).json({ message: 'Email already exists' });
@@ -51,9 +52,9 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// Login
+// POST /api/auth/login - User authentication
+// Used in: LoginScreen
 router.post('/login', async (req, res) => {
-    console.log('Login Request Body:', req.body); // Debug log
     const { email, password } = req.body;
 
     if (!email || !password) {

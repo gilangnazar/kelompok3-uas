@@ -3,9 +3,9 @@ const router = express.Router();
 const db = require('../../db');
 const authenticateToken = require('../../middleware/authMiddleware');
 
-// Middleware to check if user teaches the course (optional but recommended security)
+// Middleware to check if user teaches the course
 const checkCourseOwnership = async (req, res, next) => {
-    // Implementation can be added here, for now skipping to keep it simple as per prototype
+    // Placeholder for course ownership verification
     next();
 };
 
@@ -25,6 +25,7 @@ router.get('/:courseId/schedules', authenticateToken, async (req, res) => {
 });
 
 // GET /:courseId/materials
+// Used in: CourseDetailScreen (Instructor)
 router.get('/:courseId/materials', authenticateToken, async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -40,6 +41,7 @@ router.get('/:courseId/materials', authenticateToken, async (req, res) => {
 });
 
 // GET /:courseId/assignments
+// Used in: CourseDetailScreen (Instructor)
 router.get('/:courseId/assignments', authenticateToken, async (req, res) => {
     try {
         const { courseId } = req.params;

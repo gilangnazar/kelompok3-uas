@@ -35,7 +35,7 @@ const ensureEnrollmentByAssignment = async (studentId, assignmentId) => {
     return rows.length > 0 ? rows[0].course_id : null;
 };
 
-// GET /api/student/quizzes/assignment/:assignmentId - Quiz detail for student
+// GET /api/student/quizzes/assignment/:assignmentId - Get quiz detail for student
 router.get('/assignment/:assignmentId', authenticateToken, ensureStudent, async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -102,7 +102,7 @@ router.get('/assignment/:assignmentId', authenticateToken, ensureStudent, async 
     }
 });
 
-// GET /api/student/quizzes/:quizId/questions - Quiz questions for student
+// GET /api/student/quizzes/:quizId/questions - Get quiz questions for student
 router.get('/:quizId/questions', authenticateToken, ensureStudent, async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -152,7 +152,7 @@ router.get('/:quizId/questions', authenticateToken, ensureStudent, async (req, r
     }
 });
 
-// POST /api/student/quizzes/:quizId/attempt - Submit quiz answers
+// POST /api/student/quizzes/:quizId/attempt - Submit quiz attempt
 router.post('/:quizId/attempt', authenticateToken, ensureStudent, async (req, res) => {
     const connection = await db.getConnection();
     try {
@@ -261,7 +261,7 @@ router.post('/:quizId/attempt', authenticateToken, ensureStudent, async (req, re
     }
 });
 
-// GET /api/student/quizzes/:quizId/result - Latest quiz result for student
+// GET /api/student/quizzes/:quizId/result - Get latest quiz result for student
 router.get('/:quizId/result', authenticateToken, ensureStudent, async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -319,7 +319,7 @@ router.get('/:quizId/result', authenticateToken, ensureStudent, async (req, res)
     }
 });
 
-// GET /api/student/quizzes/attempt/:attemptId - Detailed attempt review for student
+// GET /api/student/quizzes/attempt/:attemptId - Get detailed attempt review
 router.get('/attempt/:attemptId', authenticateToken, ensureStudent, async (req, res) => {
     try {
         const studentId = req.user.id;
@@ -377,7 +377,7 @@ router.get('/attempt/:attemptId', authenticateToken, ensureStudent, async (req, 
     }
 });
 
-// GET /api/student/quizzes/attempt/:attemptId/export - Export student attempt (PDF)
+// GET /api/student/quizzes/attempt/:attemptId/export - Export student attempt as PDF
 router.get('/attempt/:attemptId/export', authenticateToken, ensureStudent, async (req, res) => {
     try {
         const { attemptId } = req.params;

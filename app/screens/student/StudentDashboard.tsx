@@ -86,6 +86,7 @@ export default function StudentDashboard() {
         return;
       }
 
+      // Fetch student dashboard data (stats, schedules, pending tasks)
       const response = await fetch(`${API_URL}/api/student/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -120,11 +121,13 @@ export default function StudentDashboard() {
     fetchDashboardData();
   }, []);
 
+  // Format date to 'DD Mon YYYY'
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
+  // Format time to 'HH:MM'
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });

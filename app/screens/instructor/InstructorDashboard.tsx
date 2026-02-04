@@ -134,6 +134,7 @@ export default function InstructorDashboard() {
         return;
       }
 
+      // Fetch aggregated dashboard stats and upcoming events
       const response = await fetch(`${API_URL}/api/instructor/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -165,11 +166,13 @@ export default function InstructorDashboard() {
     fetchDashboardData();
   }, []);
 
+  // Helper to format date as 'DD Mon YYYY'
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
+  // Helper to format time as 'HH:MM'
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });

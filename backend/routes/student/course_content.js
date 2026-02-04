@@ -29,6 +29,7 @@ const checkEnrollment = async (req, res, next) => {
 };
 
 // GET /:courseId/schedules
+// Used in: CourseDetailScreen (Student)
 router.get('/:courseId/schedules', authenticateToken, checkEnrollment, async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -44,6 +45,7 @@ router.get('/:courseId/schedules', authenticateToken, checkEnrollment, async (re
 });
 
 // GET /:courseId/materials
+// Used in: CourseDetailScreen (Student)
 router.get('/:courseId/materials', authenticateToken, checkEnrollment, async (req, res) => {
     try {
         const { courseId } = req.params;
@@ -59,6 +61,7 @@ router.get('/:courseId/materials', authenticateToken, checkEnrollment, async (re
 });
 
 // GET /:courseId/assignments
+// Used in: CourseDetailScreen (Student)
 router.get('/:courseId/assignments', authenticateToken, checkEnrollment, async (req, res) => {
     try {
         const { courseId } = req.params;

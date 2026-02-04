@@ -37,7 +37,7 @@ export default function CourseDetailScreen() {
 
         const headers = { 'Authorization': `Bearer ${token}` };
 
-        // Fetch all data in parallel
+        // Fetch all data in parallel (schedule, materials, assignments) for efficiency
         const [scheduleRes, materialRes, assignmentRes] = await Promise.all([
             fetch(`${API_URL}/api/instructor/course-content/${classId}/schedules`, { headers }),
             fetch(`${API_URL}/api/instructor/course-content/${classId}/materials`, { headers }),

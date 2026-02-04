@@ -7,15 +7,16 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret_key_change_me';
 
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    // Extract token from 'Bearer <token>' header
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
-        return res.sendStatus(401); // Unauthorized
+        return res.sendStatus(401);
     }
 
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) {
-            return res.sendStatus(403); // Forbidden
+            return res.sendStatus(403);
         }
         req.user = user;
         next();

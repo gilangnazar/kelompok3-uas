@@ -4,6 +4,7 @@ const db = require('../../db');
 const authenticateToken = require('../../middleware/authMiddleware');
 
 // GET /api/student/courses - Get all courses for the logged-in student
+// Used in: StudentDashboard, CourseListScreen (Student)
 router.get('/', authenticateToken, async (req, res) => {
     try {
         if (req.user.role !== 'student') {
