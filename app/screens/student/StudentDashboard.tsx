@@ -399,20 +399,10 @@ export default function StudentDashboard() {
       <BottomNavigator
         activeKey='home'
         items={[
-          { 
-            key: 'home', 
-            label: 'Home', 
-            icon: 'home', 
-            onPress: () => {} // Already here 
-          },
-          { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.push('/screens/student/CourseListScreen') },
-          { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
-          { 
-            key: 'profile', 
-            label: 'Profile', 
-            icon: 'person', 
-            onPress: () => router.push('/screens/student/ProfileScreen') 
-          }
+          { key: 'home', label: 'Home', icon: 'home', onPress: () => {} },
+          { key: 'courses', label: 'Course(s)', icon: 'book', onPress: () => router.push('/screens/student/CourseListScreen') },
+          { key: 'discussion', label: 'Discussion(s)', icon: 'chatbubbles' },
+          { key: 'profile', label: 'Profile', icon: 'person', onPress: () => router.push('/screens/student/ProfileScreen') }
         ]}
       />
     </View>

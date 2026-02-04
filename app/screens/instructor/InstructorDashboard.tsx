@@ -376,8 +376,8 @@ export default function InstructorDashboard() {
         activeKey='home'
         items={[
           { key: 'home', label: 'Dashboard', icon: 'grid', onPress: () => {} },
-          { key: 'courses', label: 'Courses', icon: 'book', onPress: () => router.push('/screens/instructor/CourseListScreen') },
-          { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
+          { key: 'courses', label: 'Course(s)', icon: 'book', onPress: () => router.push('/screens/instructor/CourseListScreen') },
+          { key: 'discussion', label: 'Discussion(s)', icon: 'chatbubbles' },
           { key: 'profile', label: 'Profile', icon: 'person', onPress: () => router.push('/screens/instructor/ProfileScreen') }
         ]}
       />
