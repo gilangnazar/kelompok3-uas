@@ -150,8 +150,8 @@ const CourseListScreen = () => {
         activeKey='courses'
         items={[
           { key: 'home', label: 'Dashboard', icon: 'grid', onPress: () => router.push('/screens/instructor/InstructorDashboard') },
-          { key: 'courses', label: 'Courses', icon: 'book', onPress: () => {} },
-          { key: 'discussion', label: 'Discussion', icon: 'chatbubbles' },
+          { key: 'courses', label: 'Course(s)', icon: 'book', onPress: () => {} },
+          { key: 'discussion', label: 'Discussion(s)', icon: 'chatbubbles' },
           { key: 'profile', label: 'Profile', icon: 'person', onPress: () => router.push('/screens/instructor/ProfileScreen') }
         ]}
       />
