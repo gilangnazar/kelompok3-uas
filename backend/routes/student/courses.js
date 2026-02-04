@@ -20,8 +20,6 @@ router.get('/', authenticateToken, async (req, res) => {
                 c.status,
                 c.start_date,
                 c.end_date,
-                'CS101' as code,
-                'Fall 2025' as semester,
                 (SELECT COUNT(*) FROM enrollments e2 WHERE e2.course_id = c.id) as studentsCount
             FROM enrollments e
             JOIN courses c ON c.id = e.course_id

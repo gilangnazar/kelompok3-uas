@@ -21,8 +21,6 @@ router.get('/', authenticateToken, async (req, res) => {
                 c.status, 
                 c.start_date, 
                 c.end_date,
-                'CS101' as code, -- Placeholder code, you might want to add a code column to DB
-                'Fall 2025' as semester, -- Placeholder semester
                 (SELECT COUNT(*) FROM enrollments e WHERE e.course_id = c.id) as studentsCount
             FROM courses c
             WHERE c.teacher_id = ?
